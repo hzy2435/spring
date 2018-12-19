@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 
+		通过 abstract 属性指定bean为抽象bean，可以不指定class属性，可以被子bean继承
+		不可被实例化
+	-->
+	<bean id="car" p:brand="baoma" p:price="40000000" abstract="true"></bean>
+	<!-- 子bean可以通过parent属性继承父bean -->
+	<bean id="car2" class="com.test.spring.autowired.Car"
+		p:price="90000000" parent="car"></bean>
+	<!-- bean 可以通过depends-on 属性指定bean之间的依赖 -->
+	<bean id="person" class="com.test.spring.autowired.Person"
+		p:name="Tom" depends-on="car2"></bean>
+
+</beans>

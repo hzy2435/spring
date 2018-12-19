@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 使用class指定全类名，类都需要有无参构造器 -->
+	<bean id="person" class="com.test.spring.helloworld.Person">
+		<!-- 使用属性注入通过set方法 -->
+		<property name="name2" value="world"></property>
+	</bean>
+
+	<!-- 
+		使用构造器注入属性值
+		根据不同构造器注入属性
+	 -->
+	<bean id="car" class="com.test.spring.helloworld.Car">
+		<constructor-arg value="aodu" index="0"></constructor-arg>
+		<constructor-arg value="ShangHai" index="1"></constructor-arg>
+		<constructor-arg value="3000000" type="double"></constructor-arg>
+	</bean>
+	
+	<!-- 
+		字面值中如果有特殊字符, 可以使用 <![CDATA[]]> 包裹起来
+	 -->
+	<bean id="car2" class="com.test.spring.helloworld.Car">
+		<constructor-arg value="baoma" type="java.lang.String"></constructor-arg>
+		<constructor-arg type="java.lang.String">
+			<value> <![CDATA[<Shanghai^>]]> </value>
+		</constructor-arg>
+		<constructor-arg value="150" type="int"></constructor-arg>
+	</bean>
+
+</beans>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+	<context:component-scan base-package="com.spring.hibernate"></context:component-scan>
+
+	<!-- 一、配置数据源 -->
+	<!-- 1. 导入配置文件 -->
+	<context:property-placeholder location="classpath:db.properties"/>
+	<!-- 2. 配置属性 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${dataSource.driverClass}"></property>
+		<property name="jdbcUrl" value="${dataSource.jdbcUrl}"></property>
+		<property name="user" value="${dataSource.username}"></property>
+		<property name="password" value="${dataSource.password}"></property>
+		
+		<property name="maxPoolSize" value="${dataSource.maxPoolSize}"></property>
+		<property name="initialPoolSize" value="${dataSource.initialPoolSize}"></property>
+	</bean>
+	
+	<!-- 二、配置 SessionFactory -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+	
+		<!-- 1. 配置数据源 -->
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 2. 配置 hibernate 的配置文件位置 -->
+		<property name="configLocation" value="classpath:hibernate.cfg.xml"></property>
+		<!-- 3. 配置映射文件位置 -->
+		<property name="mappingLocations" value="classpath:com/spring/hibernate/entities/*.hbm.xml"></property>
+		
+	</bean>
+	
+	<!-- 三、配置事务 -->
+	<!-- 1. 配置事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<!-- 2. 配置事务属性 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="get*" read-only="true"/>
+			<tx:method name="find*" read-only="true"/>
+			<tx:method name="*"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 3. 配置事务切点, 将切入点与属性联系起来 -->
+	<aop:config>
+		<aop:pointcut expression="execution(* com.spring.hibernate.service..*.*(..))" id="txPointcut"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+	</aop:config>
+
+</beans>

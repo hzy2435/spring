@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 静态工厂方法 -->
+	<bean id="cars" class="com.test.spring.factory.StaticCarFactory"
+		factory-method="getCar">
+		<constructor-arg value="baoma"></constructor-arg>
+	</bean>
+	
+	<!-- 实例工厂方法 -->
+	<bean id="carFactory" class="com.test.spring.factory.InstanceCarFactory"></bean>
+	<bean id="car" factory-bean="carFactory" factory-method="getCar">
+		<constructor-arg value="ford"></constructor-arg>
+	</bean>
+
+</beans>
